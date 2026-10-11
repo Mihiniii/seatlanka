@@ -21,7 +21,7 @@ async function seed() {
     operator = await User.create({
       name: 'Demo Operator',
       email: 'operator@seatlanka.dev',
-      password: 'operator123',
+      password: process.env.SEED_OPERATOR_PASSWORD ?? 'operator123',
       role: 'operator',
     });
   }
@@ -68,7 +68,7 @@ async function seed() {
   await Trip.insertMany(trips);
 
   console.log(`Seeded ${buses.length} buses, ${routes.length} routes, ${trips.length} trips.`);
-  console.log('Operator login: operator@seatlanka.dev / operator123');
+  console.log('Operator login: operator@seatlanka.dev (password from SEED_OPERATOR_PASSWORD, default operator123)');
   await mongoose.disconnect();
 }
 
