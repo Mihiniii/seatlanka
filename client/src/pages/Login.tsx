@@ -6,9 +6,10 @@ import { useAuth } from '../context/AuthContext';
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const redirectTo = (useLocation().state as { from?: string } | null)?.from ?? '/';
+  const state = useLocation().state as { from?: string; registered?: boolean; email?: string } | null;
+  const redirectTo = state?.from ?? '/';
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(state?.email ?? '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -30,6 +31,11 @@ export default function Login() {
   return (
     <AuthLayout title="Welcome back" subtitle="Sign in to book and manage your seats.">
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
+        {state?.registered && (
+          <p role="status" className="rounded-lg bg-[#E6F4EA] px-4 py-3 font-semibold text-[#1E6B3A]">
+            Account created. Sign in to continue.
+          </p>
+        )}
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className={fieldLabel}>Email</label>
           <input id="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={fieldInput} />

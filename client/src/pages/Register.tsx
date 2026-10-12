@@ -20,7 +20,7 @@ export default function Register() {
     setError('');
     try {
       await register(name, email, password);
-      navigate(redirectTo, { replace: true });
+      navigate('/login', { replace: true, state: { from: redirectTo, registered: true, email } });
     } catch (err) {
       setError((err as Error).message);
     } finally {

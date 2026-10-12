@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import { useAuth } from '../context/AuthContext';
@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 /** Top bar. Pass `children` to replace the default nav (e.g. a search summary or step list). */
 export default function Navbar({ children }: { children?: ReactNode }) {
   const { user, logout } = useAuth();
+  const [confirming, setConfirming] = useState(false);
 
   return (
     <header className="bg-navy text-white">
@@ -21,7 +22,7 @@ export default function Navbar({ children }: { children?: ReactNode }) {
                 <span className="text-[#DCE6F2]">Hi, {user.name.split(' ')[0]}</span>
                 <button
                   type="button"
-                  onClick={logout}
+                  onClick={() => setConfirming(true)}
                   className="cursor-pointer rounded-full bg-white px-5 py-3 font-bold text-navy"
                 >
                   Log out
@@ -35,6 +36,43 @@ export default function Navbar({ children }: { children?: ReactNode }) {
           </nav>
         )}
       </div>
+      {confirming && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-6"
+          onClick={() => setConfirming(false)}
+        >
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="logout-title"
+            className="w-full max-w-[380px] rounded-2xl bg-white p-6 text-navy shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="logout-title" className="text-xl font-bold">Log out?</h2>
+            <p className="mt-2 text-[15px] text-muted">Are you sure you want to log out of SeatLanka?</p>
+            <div className="mt-6 flex justify-end gap-3 text-[15px]">
+              <button
+                type="button"
+                autoFocus
+                onClick={() => setConfirming(false)}
+                className="cursor-pointer rounded-full border border-[#C9D3E0] bg-white px-5 py-3 font-bold text-navy"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirming(false);
+                  logout();
+                }}
+                className="cursor-pointer rounded-full bg-navy px-5 py-3 font-bold text-white"
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

@@ -35,9 +35,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function register(name: string, email: string, password: string) {
-    const r = await api.register({ name, email, password });
-    tokenStore.set(r.token);
-    setUser(r.user);
+    // No auto sign-in: the user is sent to the login page after registering.
+    await api.register({ name, email, password });
   }
 
   function logout() {
