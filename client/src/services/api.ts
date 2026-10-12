@@ -1,4 +1,4 @@
-import type { Seat, Trip, User } from '../types';
+import type { OrderStatus, PaymentConfig, Seat, Trip, User } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api';
 const TOKEN_KEY = 'seatlanka_token';
@@ -60,4 +60,12 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ bookingIds }),
     }),
+  paymentConfig: () => request<PaymentConfig>('/payments/config'),
+  checkout: (bookingIds: string[]) =>
+    request<{ actionUrl: string; fields: Record<string, string> }>('/payments/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ bookingIds }),
+    }),
+  orderStatus: (orderId: string) => request<OrderStatus>(`/payments/orders/${encodeURIComponent(orderId)}`),
+  cancelBooking:(bookingId: string) => request<unknown>(`/bookings/${bookingId}/cancel`, { method: 'PATCH' }),
 };
