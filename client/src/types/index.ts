@@ -40,6 +40,27 @@ export interface Seat {
   status: SeatStatus;
 }
 
+export interface PaymentState {
+  trip: Trip;
+  seats: string[];
+  bookingIds: string[];
+  holdExpiresAt: string;
+}
+
+export interface PaymentConfig {
+  provider: 'payhere' | 'demo';
+  sandbox: boolean;
+}
+
+export interface OrderStatus {
+  status: 'confirmed' | 'pending' | 'expired';
+  trip: Trip;
+  seats: string[];
+  bookingIds: string[];
+  holdExpiresAt?: string;
+  ticketCode?: string;
+}
+
 export interface TicketState {
   ticketCode: string;
   trip: Trip;

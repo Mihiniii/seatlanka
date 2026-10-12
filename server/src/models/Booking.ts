@@ -15,6 +15,9 @@ const bookingSchema = new Schema(
     status: { type: String, enum: BOOKING_STATUS, default: 'held' },
     holdExpiresAt: { type: Date },
     ticketCode: { type: String },
+    // Seats paid for together share one PayHere order
+    orderId: { type: String, index: true },
+    paymentId: { type: String },
   },
   { timestamps: true },
 );

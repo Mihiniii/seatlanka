@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import crypto from 'crypto';
 import { z } from 'zod';
 import { Booking } from '../models/Booking';
 import { Trip } from '../models/Trip';
 import { seatIdsFor } from '../models/Bus';
 import { env } from '../config/env';
 import { AppError } from '../utils/AppError';
+import { newTicketCode } from '../utils/ticketCode';
 
 const holdSchema = z.object({
   tripId: z.string().min(1),
@@ -52,10 +52,14 @@ export async function holdSeats(req: Request, res: Response) {
   res.status(201).json({ bookingIds: created, holdExpiresAt });
 }
 
-/** POST /api/bookings/confirm — turns the user's held seats into a ticket (payment comes later) */
+/**
+ * POST /api/bookings/confirm — demo mode only: turns the user's held seats into a ticket without a payment.
+ * With PayHere configured, seats are confirmed by the payment notification instead.
+ */
 export async function confirmBooking(req: Request, res: Response) {
+  if (env.payhere.enabled) throw new AppError(403, 'Bookings are confirmed once the payment is complete');
   const { bookingIds } = z.object({ bookingIds: z.array(z.string()).min(1) }).parse(req.body);
-  const ticketCode = `SLK-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+  const ticketCode = newTicketCode();
 
   const result = await Booking.updateMany(
     { _id: { $in: bookingIds }, user: req.user!.id, status: 'held', holdExpiresAt: { $gt: new Date() } },

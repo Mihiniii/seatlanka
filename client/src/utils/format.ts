@@ -18,6 +18,12 @@ export function formatDuration(fromIso: string, toIso: string) {
   return `${Math.floor(mins / 60)}h ${String(mins % 60).padStart(2, '0')}m`;
 }
 
+/** Milliseconds as m:ss, e.g. 272000 -> 4:32 */
+export function formatCountdown(ms: number) {
+  const secs = Math.ceil(ms / 1000);
+  return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+}
+
 export function formatLKR(amount: number) {
   return `LKR ${amount.toLocaleString('en-US')}`;
 }
