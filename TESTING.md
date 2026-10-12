@@ -48,6 +48,13 @@ Steps to reproduce:
 
 **How I fixed it (KAN-12):** I added a payment page with a 5-minute countdown and PayHere sandbox payments. Now the seat stays held while the passenger is on the payment page, and the booking is only confirmed when PayHere's notification arrives. I tested TC-05 again and it passed.
 
+   ## Security check: confirming without paying (TC-18)
+
+   With PayHere turned on, I called `POST /api/bookings/confirm` in Postman with a passenger token.
+   The server returned **403**, so nobody can get a ticket without paying.
+
+   ![Postman showing 403 for confirm without payment](docs/screenshots/tc18-confirm-403.png)
+
 ## Things I learned
 
 - The expected result in a test case should use the same words as the app. I first wrote "your seat" but the app says "Your pick", so I updated the test case. That was not a bug.
