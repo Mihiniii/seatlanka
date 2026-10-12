@@ -2,26 +2,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import SeatMap from '../components/SeatMap';
+import BookingSteps from '../components/BookingSteps';
 import { ChevronLeftIcon, TimerIcon } from '../components/Icons';
 import { api, ApiError } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import type { Seat, TicketState, Trip } from '../types';
+import type { PaymentState, Seat, Trip } from '../types';
 import { formatDate, formatLKR, formatTime } from '../utils/format';
 
 const MAX_SEATS = 4;
-
-function Steps() {
-  const steps = ['Trip', 'Seats', 'Payment'];
-  return (
-    <ol className="flex flex-wrap gap-2.5 text-sm font-bold">
-      {steps.map((s, i) => (
-        <li key={s} className={`rounded-full px-3.5 py-2 ${i === 1 ? 'bg-amber text-ink' : 'text-[#C9D6E6]'}`}>
-          {i + 1} · {s}
-        </li>
-      ))}
-    </ol>
-  );
-}
 
 export default function Seats() {
   const { tripId = '' } = useParams();
@@ -66,10 +54,13 @@ export default function Seats() {
     setError('');
     try {
       const hold = await api.holdSeats(tripId, selected);
-      // TODO (Week 5): PayHere sandbox payment goes here, before confirm
-      const { ticketCode } = await api.confirm(hold.bookingIds);
-      const ticket: TicketState = { ticketCode, trip, seats: selected, passengerName: user.name };
-      navigate('/ticket', { state: ticket });
+      const payment: PaymentState = {
+        trip,
+        seats: selected,
+        bookingIds: hold.bookingIds,
+        holdExpiresAt: hold.holdExpiresAt,
+      };
+      navigate('/payment', { state: payment });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Something went wrong');
       setSelected([]);
@@ -84,7 +75,7 @@ export default function Seats() {
   return (
     <div className="min-h-screen">
       <Navbar>
-        <Steps />
+        <BookingSteps active={1} />
       </Navbar>
 
       <div className="mx-auto max-w-[1200px] px-6 pt-7 pb-16">
@@ -168,7 +159,7 @@ export default function Seats() {
                 onClick={continueToPayment}
                 className="cursor-pointer rounded-xl bg-amber px-5 py-4 text-[17px] font-extrabold text-ink disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {busy ? 'Booking…' : user ? 'Continue to payment' : 'Sign in to continue'}
+                {busy ? 'Holding seats…' : user ? 'Continue to payment' : 'Sign in to continue'}
               </button>
             </div>
           </aside>
