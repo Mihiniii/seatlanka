@@ -29,7 +29,14 @@ export default function Home() {
     <div className="min-h-screen">
       <Navbar />
 
-      <section className="bg-navy pt-14 pb-[140px] text-white">
+      <section className="relative isolate overflow-hidden bg-navy pt-14 pb-[140px] text-white">
+        <img
+          src="/hero.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-[center_40%]"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-dark/85 via-navy/60 to-navy/30" />
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-12 px-6">
           <div className="min-w-0 flex-[999_1_520px]">
             <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-2 text-sm font-semibold text-[#F2C27F]">
@@ -46,7 +53,7 @@ export default function Home() {
 
           <div className="flex min-w-0 flex-[1_1_320px] flex-col gap-3">
             {FEATURES.map(({ icon: Icon, title, text }) => (
-              <div key={title} className="flex items-center gap-4 rounded-[18px] border border-white/15 bg-white/[0.08] p-5">
+              <div key={title} className="flex items-center gap-4 rounded-[18px] border border-white/20 bg-navy-dark/45 p-5 backdrop-blur-md">
                 <span className="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-amber text-navy">
                   <Icon width={22} height={22} />
                 </span>

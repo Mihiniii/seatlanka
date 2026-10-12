@@ -52,6 +52,14 @@ npm run dev              # http://localhost:5173
 
 Open http://localhost:5173, search **Colombo → Kandy** for today, pick a seat and register to book.
 
+### 3. PayHere payments (optional)
+
+Without PayHere keys the app runs in **demo mode**: "Pay" confirms the seats without a payment.
+
+To use the PayHere sandbox, set `PAYHERE_MERCHANT_ID` and `PAYHERE_MERCHANT_SECRET` in `server/.env`.
+The server works out the amount (seats × ticket price) and the checkout hash, and only confirms the seats when PayHere's signed notification arrives.
+PayHere sends that notification from the internet, so `PAYHERE_NOTIFY_URL` must be a public URL — on your own machine use a tunnel such as `ngrok http 5000`.
+
 ## API
 
 | Method | Endpoint | Auth | Description |
@@ -62,7 +70,11 @@ Open http://localhost:5173, search **Colombo → Kandy** for today, pick a seat 
 | GET | `/api/trips?from=&to=&date=` | – | Search trips |
 | GET | `/api/trips/:id/seats` | – | Seat map for a trip |
 | POST | `/api/bookings/hold` | passenger | Hold up to 4 seats |
-| POST | `/api/bookings/confirm` | passenger | Confirm held seats → ticket |
+| POST | `/api/bookings/confirm` | passenger | Confirm held seats → ticket (demo mode only) |
+| GET | `/api/payments/config` | – | `payhere` or `demo` mode |
+| POST | `/api/payments/checkout` | passenger | Signed PayHere checkout form for held seats |
+| POST | `/api/payments/notify` | PayHere | Payment notification → confirms the seats |
+| GET | `/api/payments/orders/:orderId` | passenger | Order status after returning from PayHere |
 | GET | `/api/bookings/mine` | passenger | My bookings |
 | PATCH | `/api/bookings/:id/cancel` | passenger | Cancel a booking |
 
@@ -90,7 +102,7 @@ seatlanka/
 
 - [x] Auth, trip search, seat map, seat hold, e-ticket
 - [ ] Real-time seat updates with Socket.IO
-- [ ] PayHere sandbox payment
+- [x] PayHere sandbox payment
 - [ ] Operator dashboard (add buses, schedule trips, revenue)
 - [ ] Email tickets
 - [ ] Tests (Jest + Supertest, Playwright) and GitHub Actions CI
