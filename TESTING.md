@@ -30,6 +30,17 @@ Environment: Chrome, localhost, seed data
 | TC-01 | Opened the seat map for a trip | Layout matches the bus type | Pass (2+2 only, there is no 2+3 bus in the seed data) |
 | TC-03 | Clicked an available seat | Seat turns dark blue ("Your pick") | Pass |
 | TC-05 | Passenger 1 continues to payment, passenger 2 looks at the same trip | Seat shows as "Held by others" for passenger 2 | Failed first → bug KAN-13. Pass after the fix |
+## Test cases: My bookings (KAN-15)
+
+| ID | What I did | Expected | Result |
+|---|---|---|---|
+| TC-20 | Opened My bookings as a passenger with bookings | Bookings listed with trip, date, seats, status | Pass |
+| TC-21 | Clicked a confirmed booking | QR ticket opens | Pass |
+| TC-22 | Let a seat hold expire, then opened My bookings | Expired booking not in the list | Pass |
+| TC-23 | Logged out, checked the navbar and opened /bookings directly | Link hidden, redirected to login | Pass |
+| TC-24 | Logged in as a new passenger with no bookings | "No bookings yet" message | Pass |
+
+I found that there was no way to open a ticket again after leaving the ticket page (TC-12), so I added this page.
 
 ## Bug I found: KAN-13
 
