@@ -19,6 +19,9 @@ export default function Navbar({ children }: { children?: ReactNode }) {
             </Link>
             {user ? (
               <>
+                <Link to="/bookings" className="text-[#DCE6F2] no-underline hover:text-white">
+                  My bookings
+                </Link>
                 <span className="text-[#DCE6F2]">Hi, {user.name.split(' ')[0]}</span>
                 <button
                   type="button"

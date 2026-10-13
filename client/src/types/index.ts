@@ -61,6 +61,16 @@ export interface OrderStatus {
   ticketCode?: string;
 }
 
+/** One seat on one trip, as returned by /bookings/mine */
+export interface Booking {
+  _id: string;
+  trip: Trip | null;
+  seat: string;
+  status: 'held' | 'confirmed' | 'cancelled';
+  ticketCode?: string;
+  createdAt: string;
+}
+
 export interface TicketState {
   ticketCode: string;
   trip: Trip;

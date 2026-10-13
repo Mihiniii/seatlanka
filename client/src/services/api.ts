@@ -1,4 +1,4 @@
-import type { OrderStatus, PaymentConfig, Seat, Trip, User } from '../types';
+import type { Booking, OrderStatus, PaymentConfig, Seat, Trip, User } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api';
 const TOKEN_KEY = 'seatlanka_token';
@@ -67,5 +67,6 @@ export const api = {
       body: JSON.stringify({ bookingIds }),
     }),
   orderStatus: (orderId: string) => request<OrderStatus>(`/payments/orders/${encodeURIComponent(orderId)}`),
+  myBookings: () => request<{ bookings: Booking[] }>('/bookings/mine'),
   cancelBooking:(bookingId: string) => request<unknown>(`/bookings/${bookingId}/cancel`, { method: 'PATCH' }),
 };

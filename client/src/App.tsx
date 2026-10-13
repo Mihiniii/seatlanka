@@ -5,6 +5,7 @@ import Seats from './pages/Seats';
 import Payment from './pages/Payment';
 import PaymentReturn from './pages/PaymentReturn';
 import Ticket from './pages/Ticket';
+import MyBookings from './pages/MyBookings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/payment/return/:orderId" element={<PaymentReturn />} />
       <Route path="/payment/cancel/:orderId" element={<PaymentReturn cancelled />} />
       <Route path="/ticket" element={<Ticket />} />
+      <Route path="/bookings" element={<MyBookings />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="*" element={<NotFound />} />
