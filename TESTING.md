@@ -73,9 +73,30 @@ Steps to reproduce:
 - A story can look "done" but still be missing a part. Testing it properly is how I found the missing payment step.
 - With PayHere turned on, `POST /api/bookings/confirm` must not work, otherwise someone could get a ticket without paying. It now returns 403.
 
-## Still to test
+## Test cases: two people, one seat (KAN-9)
 
-- KAN-9: two users trying to book the same seat at the same moment
-- KAN-10: what happens when the 5-minute hold runs out
-- QR e-ticket after booking
-- KAN-11: login and role permissions (with Postman)
+| ID | What I did | Expected | Result |
+|---|---|---|---|
+| TC-09 | Two passengers in two browsers picked seat 5C. Passenger 1 clicked "Continue to payment", then passenger 2 clicked it a few seconds later | Only passenger 1 gets the seat. Passenger 2 sees "Sorry, one of those seats was just taken" | Pass |
+
+This works because of the partial unique index on `(trip, seat)` in MongoDB. The database itself rejects the second booking, so it can't happen even if two requests arrive at the same moment.
+
+## Test cases: seat hold runs out (KAN-10)
+
+| ID | What I did | Expected | Result |
+|---|---|---|---|
+| TC-06 | Selected a seat and continued to payment | Payment page shows a countdown | Pass |
+| TC-08 | Waited on the payment page without paying (`SEAT_HOLD_MINUTES=1`) | Hold expires, the seat becomes available again | Pass |
+
+## Test cases: login and permissions (KAN-11)
+
+Tested in Chrome and Postman.
+
+| ID | What I did | Expected | Result |
+|---|---|---|---|
+| TC-13 | Logged in with the correct email and password | Login works | Pass |
+| TC-14 | Logged in with a wrong password | Error message, no login | Pass |
+| TC-15 | Logged in as the operator and called `POST /api/bookings/hold` | 403, only passengers can hold seats | Pass |
+| TC-16 | Called `GET /api/bookings/mine` without a token | 401 "Please log in" | Pass |
+| TC-17 | Registered with an invalid email | Validation error | Pass |
+| TC-18 | With PayHere on, called `POST /api/bookings/confirm` with a passenger token | 403, no ticket without paying | Pass |
